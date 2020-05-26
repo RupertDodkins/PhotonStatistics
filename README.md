@@ -1,1 +1,1 @@
-Code to generate photon list from MEDIS and analyse using MKIDPipeline
+Code to generate photon lists from MEDIS and analyse using MKIDPipeline statistics-based algorithms
