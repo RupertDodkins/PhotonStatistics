@@ -17,7 +17,9 @@ from medis.medis_main import RunMedis
 from medis.utils import dprint
 from medis.plot_tools import quick2D, grid
 from medis.twilight_colormaps import sunlight
-from medis.params import sp, ap, tp, iop, mp, atmp
+# from medis.params import sp, ap, tp, iop, mp, atmp
+
+from photonstatistics.master import sp, mp, iop, atmp, TESTDIR, name
 
 # sp.numframes = 100 #200 # 2000  # 1000
 # ap.companion_xy = [[2,0], [-2,0]]
@@ -137,7 +139,7 @@ class Stats_Visualiser():
         self.savefile = savefile
 
         # self.planes = [np.where(sp.save_list == 'atmosphere')[0][0], np.where(sp.save_list == 'detector')[0][0]]
-        self.planes = [np.where(sp.save_list == 'detector')[0][0]]
+        self.planes = [np.where(np.array(sp.save_list) == 'detector')[0][0]]
         self.fig, self.axes = plt.subplots(len(self.planes), 5, figsize=(17, 5))
         if len(self.planes) == 1:
             self.axes = self.axes[np.newaxis]
@@ -291,10 +293,11 @@ def investigate_quantized():
             axes_list[c][0, l].set_title(f'{obj} contrast 10^{contrast}')
     plt.show()
 
-TESTDIR = 'PhotonStatistics'
+# TESTDIR = 'PhotonStatistics'
 
 if __name__ == '__main__':
-    name = f'{TESTDIR}/frames={sp.numframes}_tau={atmp.tau}_comp_multiproc'
+    # name = f'{TESTDIR}/frames={sp.numframes}_tau={atmp.tau}_comp_multiproc'
+    name = f'{TESTDIR}/{atmp.model}'
 
     planet1_x = 189
     planet1_xy = [256, planet1_x]
@@ -307,7 +310,7 @@ if __name__ == '__main__':
     t_bins = [1, 2, 5, 10, 20, 50, 100, 200, 500]  # 2**np.arange(0,10)
     pupil_xys = [[sp.grid_size // 2, sp.grid_size // 2], [275, 275], [290, 260], [375, 375], [310, 310], planet1_xy]
 
-    iop.update_datadir('/mnt/data0/dodkins/MKIDSim/')
+    # iop.update_datadir('/mnt/data0/dodkins/MKIDSim/')
     iop.update_testname(name)
     lightcurvefile = os.path.join(iop.testdir, 'lightcurves.pkl')
     print(lightcurvefile)
@@ -334,7 +337,7 @@ if __name__ == '__main__':
 
         plt.show()
     else:
-        sp.save_list = np.array(['atmosphere', 'detector'])
+        # sp.save_list = np.array(['atmosphere', 'detector'])
         sim = RunMedis(name=name, product='fields')
         observation = sim()
 

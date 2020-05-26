@@ -10,26 +10,19 @@ from medis.medis_main import RunMedis
 from medis.utils import dprint
 from medis.plot_tools import grid
 
-from photonstatistics.master import sp, mp, iop, atmp
+from photonstatistics.master import sp, mp, iop, atmp, TESTDIR
 
-sp.numframes = 5
-# atmp.model = 'single'
-atmp.model = 'hcipy_standard'
 
-TESTDIR = f'PhotonStatistics/{sp.numframes}'
-name = f'{TESTDIR}/{atmp.model}'
 # product = 'photons'
 # product = 'rebinned_cube'
 product = 'fields'
 
 sp.verbose = True
 # sp.debug = True
+# sp.checkpointing = 10
 
 if __name__ == '__main__':
-    sp.quick_detect = False
-    mp.hot_counts = False
-    mp.dark_counts  = False
-    mp.bad_pix = True
+    name = f'{TESTDIR}/{atmp.model}'
     sim = RunMedis(name=name, product=product)
     observation = sim()
     print(observation.keys(), )
@@ -37,7 +30,7 @@ if __name__ == '__main__':
     if product == 'rebinned_cube':
         grid(observation['rebinned_cube'], vlim= (0,3))
     elif product == 'photons':
-        grid(sim.sim.rebin_list(observation['photons'])[::100], vlim= (0,3))
+        grid(sim.cam.rebin_list(observation['photons']), vlim= (0,3))
         # plt.hist(observation['photons'][0])
         # plt.show()
     else:
