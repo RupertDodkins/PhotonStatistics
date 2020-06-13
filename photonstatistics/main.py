@@ -13,9 +13,9 @@ from medis.plot_tools import grid
 from photonstatistics.master import sp, mp, iop, atmp, TESTDIR
 
 
-# product = 'photons'
+product = 'photons'
 # product = 'rebinned_cube'
-product = 'fields'
+# product = 'fields'
 
 sp.verbose = True
 # sp.debug = True
