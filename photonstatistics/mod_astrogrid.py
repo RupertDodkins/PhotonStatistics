@@ -13,11 +13,11 @@ from mkidpipeline.hdf.photontable import Photontable
 
 from photonstatistics.master import sp, mp, iop, atmp, tp, ap, TESTDIR
 
-# product = 'fields'
-product = 'photons'
-sp.numframes = 6000
+product = 'fields'
+# product = 'photons'
+# sp.numframes = 6000
 sp.sample_time = 5e-3
-TESTDIR = f'PhotonStatistics/200616/{sp.numframes}'
+TESTDIR = f'PhotonStatistics/200727/{sp.numframes}'
 sp.num_processes = 10
 sp.quick_companions = True
 dist = np.arange(1,5) * 7/4  # 7 is max radial sep and 4 is number of evenly spaced sources
