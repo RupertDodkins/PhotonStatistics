@@ -13,13 +13,17 @@ from mkidpipeline.hdf.photontable import Photontable
 
 from photonstatistics.master import sp, mp, iop, atmp, tp, ap, TESTDIR
 
-product = 'fields'
-# product = 'photons'
+# product = 'fields'
+product = 'photons'
 # sp.numframes = 6000
+sp.numframes = 1
 sp.sample_time = 5e-3
 TESTDIR = f'PhotonStatistics/200727/{sp.numframes}'
-sp.num_processes = 10
-sp.quick_companions = True
+sp.num_processes = 1
+sp.quick_companions = False
+ap.companion = False
+tp.use_aber = True
+tp.add_zern = True
 dist = np.arange(1,5) * 7/4  # 7 is max radial sep and 4 is number of evenly spaced sources
 ap.companion_xy = np.hstack((
     np.vstack((dist, np.zeros((4)))),
@@ -28,11 +32,12 @@ ap.companion_xy = np.hstack((
     -np.vstack((np.zeros((4)), dist))
  )).T
 # ap.contrast = 10**np.repeat([-3.5,-4,-4.5,-5],4)
-atmp.cn_sq = 5e-11
+atmp.cn_sq = 5e-12
 # ap.star_flux *= 20
 ap.contrast = np.repeat([4, 2, 1, 0.5],4)*1e-4
 ap.star_flux *= 0.1
-
+sp.verbose = False
+sp.debug = True
 
 class mod():
     def __init__(self, num_samp=3):
@@ -52,7 +57,7 @@ if __name__ == '__main__':
             grid(observation['fields'], show=False)#, vlim=(-2e-7,2e-7))
 
         elif product == 'photons':
-            # grid(sim.cam.rebin_list(observation['photons']), show=False)
+            grid(sim.cam.rebin_list(observation['photons']), show=False)
 
             # to look at the photontable
             obs = Photontable(iop.photonlist)
