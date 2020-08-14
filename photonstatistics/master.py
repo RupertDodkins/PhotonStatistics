@@ -30,10 +30,11 @@ atmp.model = 'single'
 tp.cg_type = 'Solid'
 tp.satelite_speck['apply'] = True
 tp.satelite_speck['amp'] = 12e-10
-tp.prescription = 'Subaru_SCExAO'  #'general_telescope' #
+tp.prescription = 'general_telescope' #'Subaru_SCExAO'  #
 tp.obscure = False
 tp.use_ao = True
 tp.ao_act = 50
+tp.use_atmos = True
 
 mp.array_size = np.array([140, 144])
 mp.hot_counts = False
