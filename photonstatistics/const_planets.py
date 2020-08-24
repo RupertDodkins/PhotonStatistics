@@ -20,7 +20,7 @@ product = 'fields'
 sp.numframes = 6000
 # sp.numframes = 5
 sp.sample_time = 5e-3
-TESTDIR = f'PhotonStatistics/200805/{sp.numframes}'
+TESTDIR = f'PhotonStatistics/200823/{sp.numframes}'
 sp.num_processes = 8
 sp.quick_companions = True
 ap.companion = True
@@ -81,7 +81,14 @@ if __name__ == '__main__':
         planet_photons = np.array(planet_photons).T
         planet_photons = np.insert(planet_photons, obj=1, values=ap.wvl_range[0], axis=0)
         photons = np.concatenate((star_photons, planet_photons), axis=1)
+
         # cam.save_photontable(photonlist=photons, index=None, populate_subsidiaries=False)
+        stem = cam.arange_into_stem(photons.T, (cam.array_size[1], cam.array_size[0]))
+        stem = list(map(list, zip(*stem)))
+        stem = cam.remove_close(stem)
+        photons = cam.ungroup(stem)
+        photons = photons[[0,1,3,2]]
+        # grid(cam.rebin_list(photons), show=False)
         cam.populate_photontable(photons=photons, finalise=False)
     cam.populate_photontable(photons=[], finalise=True)
     grid(cam.rebin_list(photons), show=False)
