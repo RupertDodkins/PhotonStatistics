@@ -17,11 +17,11 @@ from photonstatistics.master import sp, mp, iop, atmp, tp, ap
 
 product = 'fields'
 # product = 'photons'
-sp.numframes = 6000
+sp.numframes = 6001
 # sp.numframes = 5
 sp.sample_time = 5e-3
-TESTDIR = f'PhotonStatistics/200823/{sp.numframes}'
-sp.num_processes = 8
+TESTDIR = f'PhotonStatistics/200902/{sp.numframes}'
+sp.num_processes = 10
 sp.quick_companions = True
 ap.companion = True
 tp.use_aber = True
@@ -46,16 +46,18 @@ sp.debug = False
 if __name__ == '__main__':
     sim = RunMedis(name=TESTDIR, product='fields')
     observation = sim()
-    for i in range(int(np.ceil(sim.tel.num_chunks))):
-    # for i in range(2):
-        if i == 0:
+    for ichunk in range(int(np.ceil(sim.tel.num_chunks))):
+
+        if ichunk == 0:
             fields = observation['fields']
         else:
             fields = sim.tel()['fields']
 
+        abs_step = ichunk*sim.tel.chunk_steps
+
         # generate photons just for the star
         cam = Camera(usesave=False, product='photons')
-        observation = cam(fields[:,:,:,:1])
+        observation = cam(fields[:,:,:,:1], abs_step=abs_step, finalise_photontable=False)
         star_photons = observation['photons']#[[0,1,3]]
 
         # select detector plane and planets
@@ -78,8 +80,9 @@ if __name__ == '__main__':
                             # print(photon)
                             planet_photons.append(photon)
 
-        planet_photons = np.array(planet_photons).T
-        planet_photons = np.insert(planet_photons, obj=1, values=ap.wvl_range[0], axis=0)
+        planet_photons = np.array(planet_photons).T.astype(np.float32)
+        planet_photons = np.insert(planet_photons, obj=1, values=cam.phase_cal(ap.wvl_range[0]), axis=0)
+        planet_photons[0] = (planet_photons[0] + abs_step) * sp.sample_time
         photons = np.concatenate((star_photons, planet_photons), axis=1)
 
         # cam.save_photontable(photonlist=photons, index=None, populate_subsidiaries=False)
